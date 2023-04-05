@@ -24,11 +24,16 @@ type S3Storage struct {
 	logger      *log.Logger
 	purgeDays   time.Duration
 	noMultipart bool
+	partSize    int64
 }
 
 // NewS3Storage is the factory for S3Storage
-func NewS3Storage(accessKey, secretKey, bucketName string, purgeDays int, region, endpoint string, disableMultipart bool, forcePathStyle bool, logger *log.Logger) (*S3Storage, error) {
+func NewS3Storage(accessKey, secretKey, bucketName string, purgeDays int, region, endpoint string, disableMultipart bool, forcePathStyle bool, partSize int64, logger *log.Logger) (*S3Storage, error) {
 	sess := getAwsSession(accessKey, secretKey, region, endpoint, forcePathStyle)
+
+	if partSize > 0 && partSize < s3manager.MinUploadPartSize {
+		partSize = 0
+	}
 
 	return &S3Storage{
 		bucket:      bucketName,
@@ -37,6 +42,7 @@ func NewS3Storage(accessKey, secretKey, bucketName string, purgeDays int, region
 		logger:      logger,
 		noMultipart: disableMultipart,
 		purgeDays:   time.Duration(purgeDays*24) * time.Hour,
+		partSize:    partSize,
 	}, nil
 }
 
@@ -158,6 +164,7 @@ func (s *S3Storage) Put(ctx context.Context, token string, filename string, read
 	uploader := s3manager.NewUploader(s.session, func(u *s3manager.Uploader) {
 		u.Concurrency = concurrency // default is 5
 		u.LeavePartsOnError = false
+		u.PartSize = s.partSize
 	})
 
 	var expire *time.Time

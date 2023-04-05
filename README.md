@@ -86,11 +86,11 @@ https://transfer.sh/1lDau/test.txt --> https://transfer.sh/inline/1lDau/test.txt
 
 ## Usage
 
-Parameter | Description                                                                                 | Value                        | Env                         
+Parameter | Description                                                                                 | Value                        | Env
 --- |---------------------------------------------------------------------------------------------|------------------------------|-----------------------------
 listener | port to use for http (:80)                                                                  |                              | LISTENER                    |
 profile-listener | port to use for profiler (:6060)                                                            |                              | PROFILE_LISTENER            |
-force-https | redirect to https                                                                           | false                        | FORCE_HTTPS                 
+force-https | redirect to https                                                                           | false                        | FORCE_HTTPS
 tls-listener | port to use for https (:443)                                                                |                              | TLS_LISTENER                |
 tls-listener-only | flag to enable tls listener only                                                            |                              | TLS_LISTENER_ONLY           |
 tls-cert-file | path to tls certificate                                                                     |                              | TLS_CERT_FILE               |
@@ -116,6 +116,7 @@ s3-endpoint | Custom S3 endpoint.                                               
 s3-region | region of the s3 bucket                                                                     | eu-west-1                    | S3_REGION                   |
 s3-no-multipart | disables s3 multipart upload                                                                | false                        | S3_NO_MULTIPART             |
 s3-path-style | Forces path style URLs, required for Minio.                                                 | false                        | S3_PATH_STYLE               |
+s3-multipart-chunk-size | Overrides default multipart PartSize (5MB). Cannot be less than 5MB               | 5242880                     | S3_MULTIPART_CHUNK_SIZE      |
 storj-access | Access for the project                                                                      |                              | STORJ_ACCESS                |
 storj-bucket | Bucket to use within the project                                                            |                              | STORJ_BUCKET                |
 basedir | path storage for local/gdrive provider                                                      |                              | BASEDIR                     |
@@ -129,9 +130,9 @@ clamav-host | host for clamav feature                                           
 perform-clamav-prescan | prescan every upload through clamav feature (clamav-host must be a local clamd unix socket) |                              | PERFORM_CLAMAV_PRESCAN      |
 rate-limit | request per minute                                                                          |                              | RATE_LIMIT                  |
 max-upload-size | max upload size in kilobytes                                                                |                              | MAX_UPLOAD_SIZE             |
-purge-days | number of days after the uploads are purged automatically                                   |                              | PURGE_DAYS                  |   
-purge-interval | interval in hours to run the automatic purge for (not applicable to S3 and Storj)           |                              | PURGE_INTERVAL              |   
-random-token-length | length of the random token for the upload path (double the size for delete path)            | 6                            | RANDOM_TOKEN_LENGTH         |   
+purge-days | number of days after the uploads are purged automatically                                   |                              | PURGE_DAYS                  |
+purge-interval | interval in hours to run the automatic purge for (not applicable to S3 and Storj)           |                              | PURGE_INTERVAL              |
+random-token-length | length of the random token for the upload path (double the size for delete path)            | 6                            | RANDOM_TOKEN_LENGTH         |
 
 If you want to use TLS using lets encrypt certificates, set lets-encrypt-hosts to your domain, set tls-listener to :443 and enable force-https.
 
@@ -212,7 +213,7 @@ Enter your access grant name of choice, hit *Next* and restrict it as necessary/
 Afterwards continue either in CLI or within the Browser. Next, you'll be asked for a Passphrase used as Encryption Key.
 **Make sure to save it in a safe place. Without it, you will lose the ability to decrypt your files!**
 
-Afterwards, you can copy the access grant and then start the startup of the transfer.sh endpoint. 
+Afterwards, you can copy the access grant and then start the startup of the transfer.sh endpoint.
 It is recommended to provide both the access grant and the bucket name as ENV Variables for enhanced security.
 
 Example:

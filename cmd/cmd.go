@@ -164,6 +164,11 @@ var globalFlags = []cli.Flag{
 		Usage:  "Forces path style URLs, required for Minio.",
 		EnvVar: "S3_PATH_STYLE",
 	},
+	cli.Int64Flag{
+		Name:   "s3-multipart-chunk-size",
+		Usage:  "Overrides default multipart PartSize (5MB). Cannot be less than 5MB",
+		EnvVar: "S3_MULTIPART_CHUNK_SIZE",
+	},
 	cli.StringFlag{
 		Name:   "gdrive-client-json-filepath",
 		Usage:  "",
@@ -488,7 +493,7 @@ func New() *Cmd {
 				panic("secret-key not set.")
 			} else if bucket := c.String("bucket"); bucket == "" {
 				panic("bucket not set.")
-			} else if store, err := storage.NewS3Storage(accessKey, secretKey, bucket, purgeDays, c.String("s3-region"), c.String("s3-endpoint"), c.Bool("s3-no-multipart"), c.Bool("s3-path-style"), logger); err != nil {
+			} else if store, err := storage.NewS3Storage(accessKey, secretKey, bucket, purgeDays, c.String("s3-region"), c.String("s3-endpoint"), c.Bool("s3-no-multipart"), c.Bool("s3-path-style"), c.Int64("s3-multipart-chunk-size"), logger); err != nil {
 				panic(err)
 			} else {
 				options = append(options, server.UseStorage(store))

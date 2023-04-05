@@ -324,7 +324,7 @@ func versionCommand(_ *cli.Context) {
 
 // New is the factory for transfer.sh
 func New() *Cmd {
-	logger := log.New(os.Stdout, "[transfer.sh]", log.LstdFlags)
+	logger := log.New(os.Stdout, "[transfer.sh]", log.LstdFlags|log.Lmicroseconds)
 
 	app := cli.NewApp()
 	app.Name = "transfer.sh"

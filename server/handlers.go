@@ -1204,6 +1204,7 @@ func (s *Server) getHandler(w http.ResponseWriter, r *http.Request) {
 		if cr != "" {
 			w.Header().Set("Accept-Ranges", "bytes")
 			w.Header().Set("Content-Range", cr)
+			w.Header().Set("Content-Length", strconv.FormatUint(contentLength, 10))
 			if rng.Limit > 0 {
 				reader = io.NopCloser(io.LimitReader(reader, int64(rng.Limit)))
 			}

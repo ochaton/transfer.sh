@@ -426,7 +426,6 @@ func (s *Server) Run() {
 	}
 
 	r := mux.NewRouter()
-
 	var fs http.FileSystem
 
 	if s.webPath != "" {
@@ -551,7 +550,13 @@ func (s *Server) Run() {
 			handlers.LogHandler(
 				LoveHandler(
 					s.RedirectHandler(cors(r))),
-				handlers.NewLogOptions(s.logger.Printf, "_default_"),
+				handlers.NewLogOptions(s.logger.Printf,
+					`[%s] T=%.3f [END=%d] %s "%s" %s req[%s:%s] res[%s:%s] "%s" "%s" "%s"`,
+					"remote-addr", "response-time", "status", "method", "url",
+					"http-version", "req[Content-Length]", "req[Range]",
+					"res[Content-Length]", "res[Content-Range]",
+					"referer", "user-agent", "req[Transfer-Encoding]",
+				),
 			),
 			s.ipFilterOptions,
 		),
